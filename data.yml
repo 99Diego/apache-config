@@ -1,21 +1,10 @@
 vhosts:
-  # First virtual host configuration 
-  - server_name: www.domain1.com          # The domain name handled by this vhost
-    document_root: /var/www/domain1       # Directory where website files are stored
-    server_admin: admin@domain1.com       # Email of the administrator for error messages
-    directory: /usr/local/httpd/domain1   # Path that Apache will apply directory-specific rules to 
-    allow_override: All                   # Whether .htaccess files can override configuration (All = allowed)
-    options: Indexes FollowSymLinks       # Apache options: allow directory listing + follow symlinks
-    order: allow,deny                     # Acces control order: process "allow" rules before "deny"
-    allow_from: all                       # Allow requests from all hosts/networks
-
-    # Second virtual host confiuration 
-  - server_name: www.domain2.com          # Domain for the second vhost
-    document_root: /var/www/domain2       # Directory containing this site’s files
-    server_admin: admin@domain2.com       # Admin email for this site
-    directory: /usr/local/httpd/domain2   # Directory path for Apache config rules
-    allow_override: None                  # .htaccess files are not allowed to override config
-    options: None                         # No special Apache options enabled
-    order: deny,allow                     # Access control order: process "deny" rules before "allow"
-    allow_from: none                      # No external access allowed (effectively blocking traffic)
+  - server_name: www.example.com
+    document_root: /var/www/example
+    server_admin: admin@example.com
+    directory: /usr/local/httpd/example
+    allow_override: All
+    options: Indexes FollowSymLinks
+    order: allow,deny
+    allow_from: all
 
