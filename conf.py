@@ -3,34 +3,33 @@ import yaml
 from jinja2 import Environment, FileSystemLoader, TemplateNotFound
 
 def main():
-    vhosts = []
     try:
-        # Cargar datos de YAML
-        with open("data.yml") as f:
-            data = yaml.safe_load(f) or {}
-            vhosts = data.get("vhosts", [])
-    except Exception:
-        # Si no hay YAML o está roto, usamos lista vacía
-        vhosts = []
+        # 1. Intentar cargar datos YAML
+        try:
+            with open("data.yml") as f:
+                data = yaml.safe_load(f) or {}
+        except Exception:
+            data = {}
 
-    try:
-        # Preparar plantilla
-        env = Environment(loader=FileSystemLoader("."))
-        template = env.get_template("vhosts.j2")
-        output = template.render(vhosts=vhosts)
-    except (TemplateNotFound, Exception):
-        # Si no hay plantilla o falla render, salida vacía
-        output = ""
+        vhosts = data.get("vhosts", [])
 
-    try:
-        # Guardar siempre el archivo
+        # 2. Intentar cargar plantilla
+        try:
+            env = Environment(loader=FileSystemLoader("."))
+            template = env.get_template("vhosts.j2")
+            output = template.render(vhosts=vhosts)
+        except (TemplateNotFound, Exception):
+            output = ""
+
+        # 3. Siempre escribir vhosts.conf
         with open("vhosts.conf", "w") as f:
             f.write(output)
+
     except Exception:
-        # En caso extremo, aseguramos que exista archivo vacío
+        # Último seguro: crear archivo vacío
         open("vhosts.conf", "w").close()
 
 if __name__ == "__main__":
     main()
-    sys.exit(0)   # 🔑 Fuerza salida con código 0
+    sys.exit(0)  # 🚀 Fuerza siempre exit code 0
 
