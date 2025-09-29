@@ -1,0 +1,33 @@
+{#
+Loop through the list of virtual hosts defined in 'vhosts'.
+For each item (vhost) in the list, generate one <VirtualHost> block.
+#}
+{% for vhost in vhosts %}
+<VirtualHost *:80>
+	{# Define the domain name for this VirtualHost #}
+	ServerName {{ vhost.server_name }}
+
+	{# Path to the Website files (root directory for this vhost) #}
+	DocumentRoot {{ vhost.document_root }}
+	
+	{# Email address of the server administrator #}
+	ServerAdmin {{ vhost.server_admin }}
+
+	{# Directory settings for Apache access control #}
+	<Directory "{{ vhost.directory }}">
+		{# Controls whether .htaccess files can override config #}
+		AllowOverride {{ vhost.allow_override }}
+
+		{# Defines what options are allowed in this directory (e.g., Indexes, FollowSymLinks) #}
+		Options {{ vhost.options }}
+		
+		{# Old Apache 2.2 directive: defines the order of allow/deny rules #}
+		Order {{ vhost.order }}
+
+		{# Specifies which hosts/networks are allowed access #}
+		Allow from {{ vhost.allow_from }}
+	</Directory>
+</VirtualHost>
+
+{# End of the loop. Next vhost in the list will generate another <VirtualHost> block #}
+{% endfor %}
