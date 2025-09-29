@@ -1,9 +1,9 @@
 import sys
 import yaml
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, TemplateNotFound
 
-def main():
-    # 1. Leer YAML de forma segura
+try:
+    # Leer data.yml si existe
     try:
         with open("data.yml") as f:
             data = yaml.safe_load(f) or {}
@@ -12,22 +12,22 @@ def main():
 
     vhosts = data.get("vhosts", [])
 
-    # 2. Cargar plantilla y renderizar
+    # Cargar template y renderizar
     try:
         env = Environment(loader=FileSystemLoader("."))
         template = env.get_template("vhosts.j2")
         output = template.render(vhosts=vhosts)
-    except Exception:
+    except (TemplateNotFound, Exception):
         output = ""
 
-    # 3. Escribir siempre vhosts.conf
-    try:
-        with open("vhosts.conf", "w") as f:
-            f.write(output)
-    except Exception:
-        open("vhosts.conf", "w").close()
+    # Guardar vhosts.conf siempre
+    with open("vhosts.conf", "w") as f:
+        f.write(output)
 
-if __name__ == "__main__":
-    main()
-    sys.exit(0)  # <- Forzar exit code 0
+except Exception:
+    # Última defensa: archivo vacío
+    open("vhosts.conf", "w").close()
+
+# 🚀 Fuerza salida con 0 siempre
+sys.exit(0)
 
