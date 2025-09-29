@@ -8,3 +8,11 @@ vhosts:
     order: allow,deny
     allow_from: all
 
+  - server_name: www.test.com
+    document_root: /var/www/test
+    server_admin: admin@test.com
+    directory: /usr/local/httpd/test
+    allow_override: None
+    options: None
+    order: deny,allow
+    allow_from: none
